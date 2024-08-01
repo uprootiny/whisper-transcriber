@@ -5,16 +5,21 @@ import os
 model = whisper.load_model("base")
 
 def transcribe_audio(file_path):
+    if not os.path.isfile(file_path):
+        print(f"Error: File '{file_path}' does not exist.")
+        return None
+
     result = model.transcribe(file_path)
     return result["text"]
 
 def transcribe_directory(directory):
     transcriptions = {}
     for filename in os.listdir(directory):
-        if filename.endswith(".wav"):
+        if filename.endswith((".wav", ".mp3", ".m4a")):
             file_path = os.path.join(directory, filename)
             text = transcribe_audio(file_path)
-            transcriptions[filename] = text
+            if text:
+                transcriptions[filename] = text
     return transcriptions
 
 def save_transcriptions(transcriptions, output_file):

@@ -9,6 +9,12 @@ def main():
         sys.exit(1)
     
     audio_file = sys.argv[1]
+    
+    # Check if file exists
+    if not os.path.isfile(audio_file):
+        print(f"Error: File '{audio_file}' does not exist.")
+        sys.exit(1)
+    
     model = whisper.load_model("base")
     result = model.transcribe(audio_file)
     print(result["text"])
